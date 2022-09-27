@@ -1,0 +1,88 @@
+# bot.py
+import os
+import discord
+from dotenv import load_dotenv
+from discord.ext import commands
+from discord_bot_data import check_query, find_query, add_query, list_query
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN') # Get bot token from .env file
+bot = commands.Bot(command_prefix=';', intents=discord.Intents.all())
+
+@bot.event
+async def on_ready():
+    print(f'{bot.user.name} has connected to Discord!')
+
+
+# On user command
+@bot.command(name='greet', help='This bot will show the public\'s incentive of cryptocurrencies and show your prefered hentai')
+async def hello(ctx):
+    embed = discord.Embed(title="Oh Hi",
+    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    description=f"Hello {ctx.author.mention}",
+    color=discord.Color.red())
+    await ctx.send(embed=embed)
+
+
+
+
+@bot.group(name='tweet',aliases=['twt', 't'] , invoke_without_command=True)
+async def tweet(ctx):
+    embed = discord.Embed(title="Oh Hi",
+    url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    description=f"Hello {ctx.author.mention},\n "
+                f"You can use the `add` or `get` sub-command for this bot",
+    color=discord.Color.blue())
+        
+    await ctx.send(embed=embed)
+
+@tweet.command(name='get')
+async def tweet_get(ctx, query: str):
+    if check_query(query) >= 1:
+        contents = find_query(query)[0]
+        incentive = contents[1]
+
+        if incentive > 0:
+            embed = discord.Embed(title=f"Sentiment Analysis for {query}",
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            description=f"The current sentiment is {incentive/1 * 100:.2f}% positive towards {query} :+1:",
+            color=discord.Color.green())
+        else:
+            embed = discord.Embed(title=f"Sentiment Analysis for {query}",
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            description=f"The current sentiment is {incentive/1 * -100:.2f}% negative towards {query} :-1:",
+            color=discord.Color.red())
+
+    else:
+         embed = discord.Embed(title=f"{query} can't be found",
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            description=f"It seems that the query {query} can't be found in our database. \n" 
+                        f"Do try \"adding\" it to our database by using the \`add\` command",
+            color=discord.Color.red())
+    
+    await ctx.send(embed=embed)
+
+
+@tweet.command(name='add')
+async def tweet_add(ctx, query: str):
+    add_query(query)
+    embed = discord.Embed(title=f"New query added",
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            description=f"The word {query} has been added to our database!,\n "
+                        f"Scrapping process for this query will begin shortly.",
+            color=discord.Color.red())
+    await ctx.send(embed=embed)
+
+@tweet.command(name='queries')
+async def tweet_add(ctx):
+    queries = list_query()
+    embed = discord.Embed(title=f"Current existing queries",
+            url="https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            description=f"{queries} \n "
+                        f"",
+            color=discord.Color.green())
+    await ctx.send(embed=embed)
+
+
+
+bot.run(TOKEN)
