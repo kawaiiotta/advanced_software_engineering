@@ -48,9 +48,6 @@ dist/**
 *.nls.*.json
 *.i18n.json
 # pythons files
-*joey_test_data.pkl
-*FTX_BTCUSDT_2022-02-05_to_2022-05-05.csv
-*FTX_BTCUSDT_2022-04-16_to_2022-05-14.csv
-get_data/live/mongo_connection.py
-get_data/live/test.py
-get_data/live/testnotebook.ipynb
+mongo_connection.py
+test.py
+testnotebook.ipynb
