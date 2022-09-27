@@ -21,4 +21,8 @@ python bot
 ```
 
 If you want to add bot to another server
-In the ".env" file change the variable 'DISCORD_GUILD' to the name of the discord server of your choice
+Create a file called '.env'
+```
+# .env
+DISCORD_TOKEN=<enter token here>
+```
